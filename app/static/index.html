@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vulnerability dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="eyebrow">Security operations</p>
+      <h1>Vulnerability dashboard</h1>
+    </div>
+    <p id="generated" class="meta">Loading the latest scan results…</p>
+  </header>
+
+  <main>
+    <form id="filters" class="filters" aria-label="Filter findings">
+      <label>
+        Repository
+        <select id="repo" name="repo">
+          <option value="">All repositories</option>
+        </select>
+      </label>
+      <label>
+        Severity
+        <select id="severity" name="severity">
+          <option value="">All severities</option>
+        </select>
+      </label>
+      <label>
+        Status
+        <select id="status" name="status">
+          <option value="open">Open</option>
+          <option value="all">All statuses</option>
+        </select>
+      </label>
+      <label>
+        Source
+        <select id="scanType" name="scan_type">
+          <option value="">Repository and images</option>
+          <option value="manifest">Repository manifests</option>
+          <option value="container">CI images</option>
+        </select>
+      </label>
+      <button type="button" id="refresh">Refresh</button>
+    </form>
+
+    <p id="error" class="banner" hidden></p>
+    <p id="narrative" class="narrative"></p>
+
+    <section class="kpis" id="kpis" aria-label="Summary"></section>
+
+    <section class="charts">
+      <article class="card">
+        <h2>Severity</h2>
+        <p class="hint">Share of findings in the current view.</p>
+        <div class="chart-box"><canvas id="severityChart"></canvas></div>
+      </article>
+      <article class="card">
+        <h2>Fix available</h2>
+        <p class="hint">Whether the scanner recorded a fixed version.</p>
+        <div class="chart-box"><canvas id="fixChart"></canvas></div>
+      </article>
+      <article class="card">
+        <h2>Where it was found</h2>
+        <p class="hint">Repository manifest versus CI image scan.</p>
+        <div class="chart-box"><canvas id="sourceChart"></canvas></div>
+      </article>
+      <article class="card wide">
+        <h2>By repository</h2>
+        <p class="hint">Open risk in each repository, stacked by severity.</p>
+        <div class="chart-box tall"><canvas id="repoChart"></canvas></div>
+      </article>
+      <article class="card wide">
+        <h2>Age profile</h2>
+        <p class="hint">How long findings have been known, counted from the first time they were seen.</p>
+        <div class="chart-box"><canvas id="ageChart"></canvas></div>
+      </article>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h2>Findings</h2>
+        <p id="tableCount" class="hint"></p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Repository</th>
+              <th>Package</th>
+              <th>Installed</th>
+              <th>Fix</th>
+              <th>CVE</th>
+              <th>Age</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody id="findings"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/vendor/chart.umd.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
